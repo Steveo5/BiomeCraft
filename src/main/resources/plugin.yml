@@ -1,0 +1,22 @@
+name: BiomeCraft
+version: '${project.version}'
+main: steven.dev.BiomeCraft
+api-version: 1.19
+commands:
+  biomecraft:
+    description: BiomeCraft base command
+    usage: /<command>
+    permission: biomecraft.command
+    aliases: ["bc"]
+  quest:
+    description: Quest base command
+    usage: /<command>
+    permission: quest.admin
+    aliases: ["q"]
+softdepend:
+  - ProtocolLib
+  - ProtocolSupport
+  - ViaVersion
+  - ViaBackwards
+  - ViaRewind
+  - Geyser-Spigot
