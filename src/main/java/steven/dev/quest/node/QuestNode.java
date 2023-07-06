@@ -18,9 +18,8 @@ public class QuestNode {
     private String message;
     private List<QuestNodeQuestion> questNodeQuestions;
 
-    public QuestNode(String nodeName, String message, List<QuestNodeQuestion> questions) {
+    public QuestNode(String nodeName, String message) {
         this.nodeName = nodeName;
-        this.questNodeQuestions = questions;
         this.message = message;
     }
 
@@ -47,5 +46,9 @@ public class QuestNode {
 
     public List<QuestNodeQuestion> getQuestNodeQuestions() {
         return questNodeQuestions;
+    }
+
+    public void setQuestNodeQuestions(List<QuestNodeQuestion> questNodeQuestions) {
+        this.questNodeQuestions = questNodeQuestions;
     }
 }

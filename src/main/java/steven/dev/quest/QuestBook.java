@@ -46,21 +46,23 @@ public class QuestBook {
 
         for (QuestNodeQuestion question : questions) {
             ButtonComponent button = new ButtonComponent("\n" + question.getAnswer(), NamedTextColor.DARK_AQUA, ButtonComponentAction.CUSTOM).clickEvent(cb -> {
-                if (question.getQuestions().size() > 0) {
-                    setContentAndShow(question.getMessage(), question.getQuestions());
-                } else if (question.getQuestNodeAnswerActions().size() > 0) {
+                System.out.println(question.getMessage() + " " + question.getQuestNodeAnswerActions().size());
+                if (question.getQuestNodeAnswerActions().size() > 0) {
                     // TODO all actions...
                     QuestNodeAnswerAction action = question.getQuestNodeAnswerActions().get(0);
 
-                    setContentAndShow(question.getMessage());
-
-                    if (action.hasMetRequirements(this.player)) {
+                    System.out.println("About to check reqs");
+                    System.out.println(action.hasMetRequirements(this.player.getQuestJournal().getQuestProgress(this.quest)));
+                    if (action.hasMetRequirements(this.player.getQuestJournal().getQuestProgress(this.quest))) {
                         action.execute(this.player, this.quest);
+                        setContentAndShow(question.getMessage());
                     } else {
                         this.setContentAndShow("It looks like you don't have what I asked, come back when you do...");
                     }
                 } else {
-                    if (!question.getAnswer().equalsIgnoreCase("")) {
+                    if (question.getQuestions().size() > 0) {
+                        setContentAndShow(question.getMessage(), question.getQuestions());
+                    } else if (!question.getAnswer().equalsIgnoreCase("")) {
                         setContentAndShow(question.getMessage());
                     }
                 }

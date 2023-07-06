@@ -1,11 +1,14 @@
-package steven.dev.quest;
+package steven.dev.quest.data;
 
 import com.bergerkiller.bukkit.common.config.ConfigurationNode;
 import com.bergerkiller.bukkit.common.config.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import steven.dev.BiomeCraft;
+import steven.dev.BiomeCraftPlayer;
 import steven.dev.Handler;
+import steven.dev.quest.Quest;
+import steven.dev.quest.QuestHandler;
 import steven.dev.quest.journal.QuestJournal;
 import steven.dev.quest.journal.QuestJournalProgress;
 
@@ -14,7 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestJournalDataHandler extends Handler {
+public class QuestJournalLoader {
     public void saveToDisk(QuestJournal journal, Player player) {
         JavaPlugin plugin = BiomeCraft.getProvidingPlugin(BiomeCraft.class);
         File journalFolder = new File(plugin.getDataFolder() + File.separator + "data" + File.separator + "journals");
@@ -50,5 +53,31 @@ public class QuestJournalDataHandler extends Handler {
             playerJournalData.setNodeList("quests", journalDataQuestList);
             playerJournalData.save();
         }
+    }
+
+    public void loadJournal(BiomeCraftPlayer p) {
+        QuestJournal journal = new QuestJournal(p.getRoot());
+
+        JavaPlugin plugin = BiomeCraft.getProvidingPlugin(BiomeCraft.class);
+        FileConfiguration pJournalDataConfig = new FileConfiguration(plugin, "data" + File.separator + "journals" + File.separator + p.getRoot().getUniqueId().toString() + ".yml");
+        pJournalDataConfig.load();
+
+        for (ConfigurationNode progressNode : pJournalDataConfig.getNodeList("quests")) {
+            String questName = progressNode.get("quest-name", String.class).replaceAll(".yml", "");
+            String nodeName = progressNode.get("current-node", String.class);
+
+            try {
+                Quest quest = BiomeCraft.getInstance().getHandler(QuestHandler.class).getQuest(questName);
+
+                if (quest.getNode().getNodeName().equalsIgnoreCase(nodeName)) {
+                    journal.setQuestNode(quest.getNode(), quest);
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        p.setQuestJournal(journal);
     }
 }

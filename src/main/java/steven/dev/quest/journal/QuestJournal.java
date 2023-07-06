@@ -1,14 +1,10 @@
 package steven.dev.quest.journal;
 
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import steven.dev.BiomeCraft;
 import steven.dev.quest.Quest;
-import steven.dev.quest.QuestJournalDataHandler;
-import steven.dev.quest.QuestRequirementQuery;
+import steven.dev.quest.data.QuestJournalLoader;
 import steven.dev.quest.node.QuestNode;
-import steven.dev.quest.node.requirements.QuestNodeRequirement;
-import steven.dev.quest.node.requirements.QuestNodeRequirementType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,11 +62,7 @@ public class QuestJournal {
     }
 
     public void save() {
-        try {
-            BiomeCraft.getInstance().getHandler(QuestJournalDataHandler.class).saveToDisk(this, this.getOwner());
-        } catch (ClassNotFoundException evt) {
-            evt.printStackTrace();
-        }
+        new QuestJournalLoader().saveToDisk(this, this.getOwner());
     }
 
     public boolean isInProgress(Quest quest) {

@@ -2,6 +2,9 @@ package steven.dev.quest.node;
 
 import steven.dev.BiomeCraftPlayer;
 import steven.dev.quest.Quest;
+import steven.dev.quest.QuestRequirementStatus;
+import steven.dev.quest.journal.QuestJournalProgress;
+import steven.dev.quest.node.requirements.QuestNodeException;
 import steven.dev.quest.node.requirements.QuestNodeRequirement;
 
 import java.util.List;
@@ -19,13 +22,25 @@ public abstract class QuestNodeAnswerAction {
         this.requirements = requirements;
     }
 
-    public boolean hasMetRequirements(BiomeCraftPlayer player) {
+    public boolean hasMetRequirements(QuestJournalProgress playersJournalProgress) {
         System.out.println(this.getRequirements());
         if (this.getRequirements() != null && this.getRequirements().size() > 0) {
-            return false;
+            try {
+                for (QuestNodeRequirement requirement : this.getRequirements()) {
+                    if (requirement.compare(playersJournalProgress.getRequirementProgress(requirement.getName())) != QuestRequirementStatus.COMPLETE) {
+                        return false;
+                    }
+                }
+
+                return true;
+            } catch (QuestNodeException e) {
+                e.printStackTrace();
+            }
         } else {
             return true;
         }
+
+        return false;
     }
 
     public abstract void execute(BiomeCraftPlayer player, Quest quest);

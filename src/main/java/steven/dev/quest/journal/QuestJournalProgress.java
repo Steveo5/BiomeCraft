@@ -1,22 +1,18 @@
 package steven.dev.quest.journal;
 
-import com.sun.jdi.InvalidTypeException;
 import steven.dev.quest.Quest;
 import steven.dev.quest.node.QuestNode;
-import steven.dev.quest.node.requirements.QuestJournalRequirementProgress;
 import steven.dev.quest.node.requirements.QuestNodeException;
 import steven.dev.quest.node.requirements.QuestNodeRequirement;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 public class QuestJournalProgress {
     private QuestNode node;
     private Quest quest;
-
     // The requirements get set when the player actually accepts the quest
-    private HashMap<QuestNodeRequirement, Object> requirementProgress = new HashMap<>();
+    private HashMap<QuestNodeRequirement, QuestNodeRequirementProgress<Object>> requirementProgress = new HashMap<>();
 
     public QuestJournalProgress(QuestNode node, Quest quest) {
         this.node = node;
@@ -35,12 +31,10 @@ public class QuestJournalProgress {
         return quest;
     }
 
-    public <T> void setRequirementProgress(String name, T value) throws QuestNodeException {
-        if (!(value instanceof Number) && !(value instanceof Boolean)) throw new QuestNodeException("Requirement progress can only be a number or boolean");
-
+    public <T> void setRequirementProgress(String name, QuestNodeRequirementProgress<Object> progress) throws QuestNodeException {
         for (QuestNodeRequirement requirement : this.requirementProgress.keySet()) {
             if (requirement.getName().equalsIgnoreCase(name)) {
-                requirementProgress.put(requirement, value);
+                requirementProgress.put(requirement, progress);
                 return;
             }
         }
@@ -48,9 +42,13 @@ public class QuestJournalProgress {
         throw new QuestNodeException("Unknown quest requirement named in set required progress");
     }
 
-    public <T> T getRequirementProgress(String name, Class<T> type) throws QuestNodeException {
-        if (type != Boolean.class && type != Integer.class) throw new QuestNodeException("Requirement progress can only be a number or boolean");
+    public QuestNodeRequirementProgress<Object> getRequirementProgress(String name) throws QuestNodeException {
+        for (Map.Entry<QuestNodeRequirement, QuestNodeRequirementProgress<Object>> requirement : this.requirementProgress.entrySet()) {
+            if (requirement.getKey().getName().equalsIgnoreCase(name)) {
+                return requirement.getValue();
+            }
+        }
 
-        
+        throw new QuestNodeException("Unknown quest requirement named");
     }
 }

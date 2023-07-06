@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import steven.dev.quest.*;
+import steven.dev.quest.data.QuestLoader;
 import steven.dev.quest.journal.QuestJournalSaveTask;
 
 import java.util.*;
@@ -16,9 +17,6 @@ public final class BiomeCraft extends JavaPlugin {
 
     private static List<Spawn> spawns = new ArrayList<Spawn>();
     private static final HashMap<UUID, BiomeCraftPlayer> players = new HashMap<>();
-//    private static QuestHandler questHandler;
-//    private static QuestUIHandler questUIHandler;
-//    private static QuestDataHandler questDataHandler;
 
     private final List<Handler> handlers = new ArrayList<>();
 
@@ -34,17 +32,9 @@ public final class BiomeCraft extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new QuestListener(), this);
 
         this.registerHandler(new ScoreboardHandler());
-        this.registerHandler(new QuestDataHandler());
         this.registerHandler(new QuestHandler());
-        this.registerHandler(new QuestJournalDataHandler());
 
-
-        try {
-            BiomeCraft.getInstance().getHandler(QuestDataHandler.class).loadQuestsFromDisk(BiomeCraft.getInstance());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
+        new QuestLoader().loadQuestsFromDisk(this);
         new QuestJournalSaveTask().runTaskTimer(this, 1200L, 1200L);
     }
 

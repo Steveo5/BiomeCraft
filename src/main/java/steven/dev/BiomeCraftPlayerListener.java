@@ -1,22 +1,15 @@
 package steven.dev;
 
-import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.inventory.TradeSelectEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.MerchantInventory;
-import org.bukkit.inventory.MerchantRecipe;
 import steven.dev.quest.Quest;
-import steven.dev.quest.QuestDataHandler;
+import steven.dev.quest.data.QuestJournalLoader;
 import steven.dev.quest.QuestHandler;
 import steven.dev.quest.journal.QuestJournal;
 
@@ -26,18 +19,12 @@ public class BiomeCraftPlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent evt) {
-        try {
-            QuestDataHandler questDataHandler = BiomeCraft.getInstance().getHandler(QuestDataHandler.class);
+        BiomeCraft.getInstance().log(Level.INFO, "Loaded quest journal for " + evt.getPlayer().getName());
+        BiomeCraftPlayer player = BiomeCraft.getPlayer(evt.getPlayer());
 
-            BiomeCraft.getInstance().log(Level.INFO, "Loaded quest journal for " + evt.getPlayer().getName());
-            BiomeCraftPlayer player = BiomeCraft.getPlayer(evt.getPlayer());
-
-            if (player != null) {
-                questDataHandler.loadJournal(player);
-                player.showScoreboard(ScoreboardType.QUEST_JOURNAL);
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        if (player != null) {
+            new QuestJournalLoader().loadJournal(player);
+            player.showScoreboard(ScoreboardType.QUEST_JOURNAL);
         }
     }
 
