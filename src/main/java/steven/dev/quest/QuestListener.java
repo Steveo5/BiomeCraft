@@ -1,22 +1,9 @@
 package steven.dev.quest;
 
 import io.papermc.paper.event.block.BlockBreakBlockEvent;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.title.Title;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.inventory.ItemStack;
-import steven.dev.BiomeCraft;
-import steven.dev.BiomeCraftPlayer;
-import steven.dev.ScoreboardType;
-import steven.dev.quest.node.requirements.QuestNodeRequirement;
-import steven.dev.quest.node.requirements.QuestNodeRequirementType;
-import steven.dev.util.InventoryUtil;
-
-import java.util.List;
 
 public class QuestListener implements Listener {
     @EventHandler

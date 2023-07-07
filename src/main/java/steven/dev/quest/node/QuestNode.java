@@ -17,6 +17,7 @@ public class QuestNode {
     // The reward for entering this node
     private String message;
     private List<QuestNodeQuestion> questNodeQuestions;
+    private List<QuestNodeRequirement> requirements = new ArrayList<>();
 
     public QuestNode(String nodeName, String message) {
         this.nodeName = nodeName;
@@ -50,5 +51,17 @@ public class QuestNode {
 
     public void setQuestNodeQuestions(List<QuestNodeQuestion> questNodeQuestions) {
         this.questNodeQuestions = questNodeQuestions;
+    }
+
+    /**
+     * Get all quest node requirements over all question chains
+     * @return
+     */
+    public List<QuestNodeRequirement> getAllRequirements() {
+        return this.requirements;
+    }
+
+    public void setAllRequirements(List<QuestNodeRequirement> requirements) {
+        this.requirements = requirements;
     }
 }

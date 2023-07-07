@@ -5,6 +5,7 @@ import steven.dev.BiomeCraft;
 import steven.dev.quest.Quest;
 import steven.dev.quest.data.QuestJournalLoader;
 import steven.dev.quest.node.QuestNode;
+import steven.dev.quest.node.requirements.QuestNodeRequirement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,18 +38,25 @@ public class QuestJournal {
         return true;
     }
 
-    public boolean setQuestNode(QuestNode node, Quest quest) {
+    public void setQuestNode(QuestNode node, Quest quest) {
+        QuestJournalProgress questJournalProgress = null;
+
         for (QuestJournalProgress journalQuest : questProgress) {
             if (journalQuest.getQuest().getName().equalsIgnoreCase(quest.getName())) {
                 journalQuest.setNode(node);
-                return true;
+                questJournalProgress = journalQuest;
+                break;
             }
         }
 
-        QuestJournalProgress newQuestProgress = new QuestJournalProgress(node, quest);
-        questProgress.add(newQuestProgress);
+        if (questJournalProgress == null) {
+            questJournalProgress = new QuestJournalProgress(node, quest);
+            questProgress.add(questJournalProgress);
+        }
 
-        return false;
+        for (QuestNodeRequirement requirement : node.getAllRequirements()) {
+            questJournalProgress.setRequirementProgress(requirement, requirement.getDefaultValue());
+        }
     }
 
     public QuestJournalProgress getQuestProgress(Quest quest) {

@@ -68,6 +68,15 @@ public class QuestNodeItemRequirement extends QuestNodeRequirement {
 //        }
     }
 
+    @Override
+    public void execute(BiomeCraftPlayer player) throws QuestNodeException {
+        if (player.getRoot().getInventory().contains(this.getRequiredItem(), this.getRequiredAmount())) {
+            // TODO take items from player
+        } else {
+            throw new QuestNodeException("You do not have " + this.getRequiredAmount() + " " + this.getRequiredItem().getType());
+        }
+    }
+
     public ItemStack getRequiredItem() {
         return requiredItem;
     }

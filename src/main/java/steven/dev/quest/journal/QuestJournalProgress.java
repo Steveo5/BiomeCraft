@@ -31,7 +31,7 @@ public class QuestJournalProgress {
         return quest;
     }
 
-    public <T> void setRequirementProgress(String name, QuestNodeRequirementProgress<Object> progress) throws QuestNodeException {
+    public <T> void updateRequirementProgress(String name, QuestNodeRequirementProgress<Object> progress) throws QuestNodeException {
         for (QuestNodeRequirement requirement : this.requirementProgress.keySet()) {
             if (requirement.getName().equalsIgnoreCase(name)) {
                 requirementProgress.put(requirement, progress);
@@ -42,6 +42,10 @@ public class QuestJournalProgress {
         throw new QuestNodeException("Unknown quest requirement named in set required progress");
     }
 
+    public void setRequirementProgress(QuestNodeRequirement requirement, QuestNodeRequirementProgress<Object> progress) {
+        this.requirementProgress.put(requirement, progress);
+    }
+
     public QuestNodeRequirementProgress<Object> getRequirementProgress(String name) throws QuestNodeException {
         for (Map.Entry<QuestNodeRequirement, QuestNodeRequirementProgress<Object>> requirement : this.requirementProgress.entrySet()) {
             if (requirement.getKey().getName().equalsIgnoreCase(name)) {
@@ -49,6 +53,6 @@ public class QuestJournalProgress {
             }
         }
 
-        throw new QuestNodeException("Unknown quest requirement named");
+        throw new QuestNodeException("Unknown quest requirement named " + name);
     }
 }

@@ -9,6 +9,8 @@ public class QuestNodeRequirementProgress<T> {
         if (!(progress instanceof Integer) && !(progress instanceof Boolean) && !(progress instanceof String))  {
             throw new QuestNodeException("Progress can only be a boolean, string or integer");
         }
+
+        this.progress = progress;
     }
 
     public String asString()  {

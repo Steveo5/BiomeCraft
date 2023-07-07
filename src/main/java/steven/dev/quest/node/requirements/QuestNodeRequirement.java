@@ -11,6 +11,7 @@ import steven.dev.quest.journal.QuestNodeRequirementProgress;
 public abstract class QuestNodeRequirement {
     private String name;
     private QuestNodeRequirementType type;
+    private QuestNodeRequirementProgress<Object> defaultValue;
 
     protected QuestNodeRequirement(String name, QuestNodeRequirementType type) {
         this.name = name;
@@ -30,4 +31,14 @@ public abstract class QuestNodeRequirement {
     public String getName() {
         return name;
     }
+
+    public void setDefaultValue(QuestNodeRequirementProgress<Object> defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    public QuestNodeRequirementProgress<Object> getDefaultValue() {
+        return this.defaultValue;
+    }
+
+    public abstract void execute(BiomeCraftPlayer player) throws QuestNodeException;
 }

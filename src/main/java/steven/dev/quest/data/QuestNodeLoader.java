@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import steven.dev.BiomeCraft;
 import steven.dev.quest.Quest;
+import steven.dev.quest.journal.QuestNodeRequirementProgress;
 import steven.dev.quest.node.*;
 import steven.dev.quest.node.requirements.QuestNodeException;
 import steven.dev.quest.node.requirements.QuestNodeItemRequirement;
@@ -54,6 +55,8 @@ public class QuestNodeLoader {
     }
 
     public QuestNode load() {
+        List<String> requirementNames = this.nodeConfig.getNodeList("requirements").stream().map(configurationNode -> configurationNode.get("name", String.class)).toList();
+        this.node.setAllRequirements(this.loadNodeRequirementsFromFile(requirementNames.toArray(new String[requirementNames.size()])));
         return this.node;
     }
 
@@ -126,6 +129,11 @@ public class QuestNodeLoader {
                 ItemStack item = new ItemStack(itemType);
 
                 QuestNodeRequirement requirement = new QuestNodeItemRequirement(requirementName, item, amount);
+                try {
+                    requirement.setDefaultValue(new QuestNodeRequirementProgress<>(0));
+                } catch (QuestNodeException e) {
+                    e.printStackTrace();
+                }
                 requirements.add(requirement);
             }
         }

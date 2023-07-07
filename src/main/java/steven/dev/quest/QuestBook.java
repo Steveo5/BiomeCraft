@@ -10,6 +10,7 @@ import steven.dev.gui.*;
 import steven.dev.quest.node.QuestNode;
 import steven.dev.quest.node.QuestNodeAnswerAction;
 import steven.dev.quest.node.QuestNodeQuestion;
+import steven.dev.quest.node.requirements.QuestNodeException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,16 +47,17 @@ public class QuestBook {
 
         for (QuestNodeQuestion question : questions) {
             ButtonComponent button = new ButtonComponent("\n" + question.getAnswer(), NamedTextColor.DARK_AQUA, ButtonComponentAction.CUSTOM).clickEvent(cb -> {
-                System.out.println(question.getMessage() + " " + question.getQuestNodeAnswerActions().size());
                 if (question.getQuestNodeAnswerActions().size() > 0) {
                     // TODO all actions...
                     QuestNodeAnswerAction action = question.getQuestNodeAnswerActions().get(0);
 
-                    System.out.println("About to check reqs");
-                    System.out.println(action.hasMetRequirements(this.player.getQuestJournal().getQuestProgress(this.quest)));
                     if (action.hasMetRequirements(this.player.getQuestJournal().getQuestProgress(this.quest))) {
-                        action.execute(this.player, this.quest);
-                        setContentAndShow(question.getMessage());
+                        try {
+                            action.executeWithRequirements(this.player, this.quest);
+                            setContentAndShow(question.getMessage());
+                        } catch (QuestNodeException e) {
+                            this.setContentAndShow(e.getMessage());
+                        }
                     } else {
                         this.setContentAndShow("It looks like you don't have what I asked, come back when you do...");
                     }
